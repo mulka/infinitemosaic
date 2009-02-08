@@ -1,17 +1,8 @@
 <?php
 
-require_once 'includes/config.php';
-
-function createFlickrApiUrl($method, $params = array()){
-	global $flickrApiKey;
-	$params['api_key'] = $flickrApiKey;
-	$params['method'] = $method;
-	return 'http://api.flickr.com/services/rest/?'.http_build_query($params);
-}
+require_once 'includes/func.createFlickrApiUrl.php';
 
 function getPhotosByTag($tag){
-	global $api;
-
 	$rv = array();
 	
 	$page = 1;
