@@ -11,7 +11,7 @@ function getPhotosByTag($tag){
 
 		foreach($xml->photos->photo as $photo){
 			$a = $photo->attributes();
-			$photoUrl = "http://farm{$a->farm}.static.flickr.com/{$a->server}/{$a->id}_{$a->secret}_s.jpg";
+			$photoUrl = "http://farm{$a->farm}.static.flickr.com/{$a->server}/{$a->id}_{$a->secret}.jpg";
 			array_push($rv, array('id' => (int)$a->id, 'url' => $photoUrl));
 		}
 		$page++;
