@@ -1,0 +1,7 @@
+{
+'base_image_url': "http://farm4.static.flickr.com/3500/3262123066_b7c87c09ea_o.jpg",
+'image_collection_url': "http://infinitemosaic.com/prepared.tar",
+'mosaic_bucket': "infmos",
+'mosaic_key': "ssw2"
+} 
+
