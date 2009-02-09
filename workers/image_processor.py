@@ -1,17 +1,17 @@
 #!/usr/bin/env python
-
-from settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, TMP_DIR
-
 # processes the image before hand
 # 
 import amqplib.client_0_8 as amqp
 import simplejson as json
 import S3
 import mimetypes
+
+from settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, TMP_DIR
+
+from optparse import OptionParser
 from httplib import HTTPConnection
 from urlparse import urlparse
 from uuid import uuid1
-
 from os import path, mkdir, rmdir
 from subprocess import call
 from hashlib import md5
@@ -94,6 +94,7 @@ def process_base_image(file_name):
     return True
 
 def callback(msg):
+    print("MESSAGE: %s" % msg.body)
     p_msg = json.loads(msg.body)
 
     image_collection_url = p_msg['image_collection_url']
@@ -146,14 +147,11 @@ def main():
     ch = conn.channel()
     ch.access_request('/data', active=True, read=True)
 
-    ch.exchange_declare('myfan', 'fanout', auto_delete=True)
-    qname, _, _ = ch.queue_declare()
-    ch.queue_bind(qname, 'myfan')
+    ch.exchange_declare('mosaic.create', 'direct', auto_delete=False, durable=False)
+    ch.queue_declare(queue="mosaic.create", durable=True, exclusive=False, auto_delete=False) 
+    ch.queue_bind("mosaic.create", 'mosaic.create')
     ch.basic_consume(qname, callback=callback)
 
-    #
-    # Loop as long as the channel has callbacks registered
-    #
     while ch.callbacks:
         ch.wait()
 
